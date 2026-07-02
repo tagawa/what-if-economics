@@ -50,8 +50,8 @@ body {
 header {
   background: linear-gradient(180deg, #fafafa 0%, #f0eeea 100%);
   border: 1px solid #c7c3bb;
-  border-radius: 12px 12px 12px 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.06);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.1);
   padding: 12px 18px;
   margin-bottom: 20px;
   display: flex;
@@ -95,7 +95,7 @@ header button {
   font-size: 0.875rem;
   font-weight: 600;
   box-shadow: 0 1px 2px rgba(0,0,0,0.18);
-  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 header button:hover {
   background: #f0eeea;
@@ -155,14 +155,14 @@ header button:focus:not(:focus-visible) {
   background: #ffffff;
   border: 1px solid #c7c3bb;
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   padding: 18px;
   margin-bottom: 24px;
 }
 
 #scenarios h3 {
   margin: 0 0 12px 0;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: #5e5c64;
   text-transform: uppercase;
@@ -180,8 +180,8 @@ header button:focus:not(:focus-visible) {
   font-size: 0.875rem;
   font-weight: 400;
   color: #1d1d1d;
-  transition: background-color 0.12s, border-color 0.12s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.07);
+  transition: background-color 0.2s, border-color 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 #scenarios button:hover {
   background: #f0eeea;
@@ -191,7 +191,7 @@ header button:focus:not(:focus-visible) {
 #factors {
   align-items: stretch;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 5fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -201,9 +201,9 @@ header button:focus:not(:focus-visible) {
   background: #ffffff;
   border: 1px solid #c7c3bb;
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   padding: 18px;
-  transition: box-shadow 0.15s;
+  transition: box-shadow 0.2s;
   min-height: 150px;
   display: flex;
   flex-direction: column;
@@ -229,7 +229,7 @@ header button:focus:not(:focus-visible) {
   height: 2.5em;
   text-align: center;
   margin: 0 0 8px 0;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: #1d1d1d;
 }
@@ -277,7 +277,7 @@ header button:focus:not(:focus-visible) {
   font-weight: bold;
 }
 .status-text {
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 .factor-controls {
@@ -300,11 +300,11 @@ header button:focus:not(:focus-visible) {
   border-radius: 6px;
   background: #ffffff;
   cursor: pointer;
-  transition: background-color 0.12s, border-color 0.12s;
+  transition: background-color 0.2s, border-color 0.2s;
   min-width: 56px;
   font-family: inherit;
   color: #1d1d1d;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 .control-btn:hover {
   background: #f0eeea;
@@ -315,7 +315,7 @@ header button:focus:not(:focus-visible) {
   box-shadow: none;
 }
 .control-btn:focus {
-  outline: 3px solid #1a5fb4;
+  outline: 2px solid #1a5fb4;
   outline-offset: 2px;
 }
 
@@ -368,7 +368,7 @@ header button:focus:not(:focus-visible) {
   cursor: pointer;
 }
 #notes h3 {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: #5e5c64;
   margin: 14px 0 6px;
@@ -376,7 +376,7 @@ header button:focus:not(:focus-visible) {
   letter-spacing: 0.08em;
 }
 #notes h4 {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: #3d3846;
   margin: 10px 0 4px;
@@ -395,12 +395,12 @@ header button:focus:not(:focus-visible) {
   header > * + * { margin-top: 12px; } /* column spacing without flex `gap` */
   #factors { grid-template-columns: 1fr; }
   #scenarios button { display: block; width: 100%; margin: 8px 0; }
-  .factor-controls > * + * { margin-left: 5px; }
+  .factor-controls > * + * { margin-left: 6px; }
   .control-btn { padding: 8px 10px; }
   .btn-icon { font-size: 1.2rem; }
   .btn-text { font-size: 0.65rem; }
   .factor-card { min-height: 200px; }
-  .factor-status { padding: 10px; font-size: 0.9rem; }
+  .factor-status { padding: 10px; font-size: 0.875rem; }
   .status-icon { font-size: 1.1rem; margin-right: 6px; }
 }
 
@@ -420,7 +420,7 @@ header button:focus:not(:focus-visible) {
 }
 
 @media (max-width: 1000px) {
-  #factors { grid-template-columns: repeat(auto-fit, minmax(200px, 2fr)); }
+  #factors { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 }
 @media (max-width: 400px) {
   #factors { grid-template-columns: 1fr; }
