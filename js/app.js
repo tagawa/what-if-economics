@@ -13,12 +13,26 @@ function scenarioFitsBeginnerMode(scenario, coreFactors) {
   return Object.keys(scenario.changes).every(id => coreFactors.includes(id));
 }
 
+// Decide the initial Beginner Mode state at load. A ?mode=beginner URL forces it on for
+// that visit (shareable link); otherwise honour the saved preference. The URL never
+// overwrites the stored preference — it only wins for the current load.
+function resolveInitialBeginnerMode(modeValue, savedPref) {
+  if (modeValue === 'beginner') return true;
+  return savedPref;
+}
+
 class EconRipple {
   constructor() {
     this.data = new EconData();
     this.state = null;
     this.isBeginnerMode = false;
+    this.hasTrackedAdjust = false; // fire "Adjusted a factor" only once per page load
     this.delays = { medium: 500 };
+  }
+
+  // Fathom loads via defer and may be blocked; never let a missing global throw.
+  track(name) {
+    if (window.fathom) window.fathom.trackEvent(name);
   }
 
   async init() {
@@ -29,7 +43,12 @@ class EconRipple {
 
       this.state = new EconState(this.data.getBaselineState());
 
-      this.isBeginnerMode = this.state.getPreference('beginnerMode', false);
+      // ?mode=beginner (shareable link) wins for this load; otherwise the saved preference.
+      // The URL is NOT persisted — this must not route through toggleBeginnerMode(), which
+      // owns the Enabled/Exited beginner mode events (those mean user action only).
+      const savedBeginner = this.state.getPreference('beginnerMode', false);
+      this.urlMode = new URLSearchParams(location.search).get('mode'); // read once; reused for the arrival event
+      this.isBeginnerMode = resolveInitialBeginnerMode(this.urlMode, savedBeginner);
 
       this.createUI();
     } catch (error) {
@@ -95,7 +114,10 @@ class EconRipple {
 
     // Header buttons — static, direct listeners
     document.getElementById('btn-beginner').addEventListener('click', () => this.toggleBeginnerMode());
-    document.getElementById('btn-reset').addEventListener('click', () => this.reset());
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      this.reset();
+      this.track('Reset factors');
+    });
 
     document.getElementById('lang-switcher').addEventListener('click', (e) => {
       const btn = e.target.closest('button[data-lang]');
@@ -116,6 +138,12 @@ class EconRipple {
       // Reset and scenarios deliberately do not set it.
       if (action === 'lower' || action === 'raise') {
         this.state.savePreference('hintDismissed', true);
+        // Coarse engagement signal: first DIRECT factor click per load. Lives here, not in
+        // adjustFactor(), which applyScenario() also calls — that would misattribute scenarios.
+        if (!this.hasTrackedAdjust) {
+          this.hasTrackedAdjust = true;
+          this.track('Adjusted a factor');
+        }
       }
       if (action === 'lower') this.adjustFactor(factorId, 'low');
       else if (action === 'raise') this.adjustFactor(factorId, 'high');
@@ -127,7 +155,20 @@ class EconRipple {
       const btn = e.target.closest('button[data-scenario]');
       if (!btn) return;
       this.applyScenario(btn.dataset.scenario);
+      this.track('Applied scenario: ' + btn.dataset.scenario); // detailed: scenario ID
     });
+
+    // Notes is a <details>; the toggle event fires on open and close — track opens only.
+    document.getElementById('notes').addEventListener('toggle', (e) => {
+      if (e.target.open) this.track('Opened notes');
+    });
+
+    // Count arrivals via a shared ?mode=beginner link. Pairs with the /?mode=beginner
+    // pageview (data-canonical="false") for cross-checking. Reuses this.urlMode read in
+    // init(). Fires after DOMContentLoaded + data load, so window.fathom is defined.
+    if (this.urlMode === 'beginner') {
+      this.track('Arrived via beginner link');
+    }
   }
 
   renderFactors() {
@@ -325,6 +366,7 @@ class EconRipple {
   toggleBeginnerMode() {
     this.isBeginnerMode = !this.isBeginnerMode;
     this.state.savePreference('beginnerMode', this.isBeginnerMode);
+    this.track(this.isBeginnerMode ? 'Enabled beginner mode' : 'Exited beginner mode');
     this.renderFactors();
 
     const button = document.getElementById('btn-beginner');
@@ -338,6 +380,7 @@ class EconRipple {
     try {
       await i18n.setLang(lang);
       this.rerenderAll();
+      this.track('Switched language: ' + lang);
     } catch (err) {
       console.warn('[i18n] language switch failed', err);
       // previously loaded language still functional; aria-current on buttons unchanged
@@ -367,7 +410,7 @@ class EconRipple {
 
 // In Node (tests) export the pure helpers; in the browser bootstrap the app.
 if (typeof module !== 'undefined') {
-  module.exports = { CORE_FACTORS, scenarioFitsBeginnerMode };
+  module.exports = { CORE_FACTORS, scenarioFitsBeginnerMode, resolveInitialBeginnerMode };
 } else {
   const app = new EconRipple();
   document.addEventListener('DOMContentLoaded', () => app.init());
