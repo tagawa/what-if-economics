@@ -19,14 +19,14 @@ Runs in the browser, nothing to install. Works on phones and older devices too.
 
 Most people won't need this section. If you want to run or hack on it:
 
-The app loads its data with `fetch()`, which browsers block on `file://` URLs, so it needs to be served over HTTP. Any static server works:
+Get the live code from the `gh-pages` branch. The app loads its data with `fetch()`, which browsers block on `file://` URLs, so it needs to be served over HTTP. Any static server works:
 
 ```bash
 python3 -m http.server 8080
 # then open http://localhost:8080
 ```
 
-Run the tests with `npm test` (Node's built-in runner, nothing to install; tested on Node v25).
+Run the tests (on the `main` branch) with `npm test` (Node's built-in runner, nothing to install; tested on Node v25).
 
 No build step, no dependencies, no framework. The shipped JavaScript is written to an ES2017 syntax floor so it runs on older and low-end devices.
 
