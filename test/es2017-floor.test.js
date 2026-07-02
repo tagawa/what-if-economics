@@ -23,8 +23,10 @@ const BANNED = [
   { name: 'nullish coalescing ( ?? )       [ES2020]', re: /\?\?/ },
   { name: 'object spread/rest ( { ... } )  [ES2018]', re: /\{\s*\.\.\./ },
   { name: 'optional catch binding (catch{) [ES2019]', re: /catch\s*\{/ },
+  { name: 'regex lookbehind / named group ( (?< ) [ES2018]', re: /\(\?</ },
 ];
 
+// Non-recursive by design: js/ is flat today. Revisit (readdirSync recursive) if js/ gains subdirs.
 function jsFiles(dir) {
   return fs.readdirSync(dir)
     .filter(f => f.endsWith('.js'))

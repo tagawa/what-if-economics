@@ -1,6 +1,6 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert/strict');
-const { CORE_FACTORS, scenarioFitsBeginnerMode } = require('../js/app.js');
+const { CORE_FACTORS, scenarioFitsBeginnerMode, resolveInitialBeginnerMode } = require('../js/app.js');
 const scenarios = require('../data/scenarios.json').scenarios;
 
 describe('scenarioFitsBeginnerMode', () => {
@@ -24,5 +24,20 @@ describe('scenarioFitsBeginnerMode', () => {
       .filter(id => !scenarioFitsBeginnerMode(scenarios[id], CORE_FACTORS))
       .sort();
     assert.deepEqual(hidden, ['confidence_boost', 'currency_crisis', 'market_crash']);
+  });
+});
+
+describe('resolveInitialBeginnerMode', () => {
+  test('?mode=beginner forces beginner on, regardless of saved pref', () => {
+    assert.equal(resolveInitialBeginnerMode('beginner', false), true);
+    assert.equal(resolveInitialBeginnerMode('beginner', true), true);
+  });
+
+  test('no/other mode param falls through to the saved preference', () => {
+    assert.equal(resolveInitialBeginnerMode(null, true), true);
+    assert.equal(resolveInitialBeginnerMode(null, false), false);
+    assert.equal(resolveInitialBeginnerMode('full', true), true);
+    assert.equal(resolveInitialBeginnerMode('full', false), false);
+    assert.equal(resolveInitialBeginnerMode('anything', false), false);
   });
 });
