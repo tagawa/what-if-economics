@@ -1,0 +1,24 @@
+# what if… economics
+
+Interactive economics simulator. Adjust one macroeconomic factor and watch the
+change ripple through related factors. Free, no login, no prior knowledge needed.
+Available in English and Japanese (language switches client-side on one URL).
+
+## How it works
+- Single-page static web app; requires JavaScript.
+- Pick a factor, change it, and the app shows the directional knock-on effects on
+  related factors, with notes on caveats and conditions.
+
+## Data
+- Factor relationships and scenarios are stored as static JSON under /data.
+- Directional factor relationships (how one factor affects another) are a small
+  machine-readable knowledge graph:
+  https://whatifeconomics.com/data/relationships.json - agents can answer "how
+  does X affect Y" from this directly.
+- Copy is localised via /i18n (ui.en.json, ui.ja.json).
+- The data models directional, illustrative relationships for learning; it is not
+  a forecast or a citable dataset.
+
+## Links
+- App: https://whatifeconomics.com/
+- Relationships data: https://whatifeconomics.com/data/relationships.json
