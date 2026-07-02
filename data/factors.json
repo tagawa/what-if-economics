@@ -1,0 +1,64 @@
+{
+  "factors": {
+    "interest_rate": {
+      "name":        { "en": "Interest Rate",                                        "ja": "金利" },
+      "description": { "en": "The cost of borrowing money set by the central bank.", "ja": "中央銀行が設定する借入コスト。" },
+      "low":         { "en": "Lower",   "ja": "低下" },
+      "high":        { "en": "Higher",  "ja": "上昇" }
+    },
+    "inflation": {
+      "name":        { "en": "Inflation Rate",                                "ja": "インフレ率" },
+      "description": { "en": "How fast prices are rising across the economy.", "ja": "経済全体の物価上昇速度。" },
+      "low":         { "en": "Falling", "ja": "低下中" },
+      "high":        { "en": "Rising",  "ja": "上昇中" }
+    },
+    "unemployment": {
+      "name":        { "en": "Unemployment Rate",                                                    "ja": "失業率" },
+      "description": { "en": "Percentage of people who want jobs but can't find them.",              "ja": "仕事を探しているが見つけられない人々の割合。" },
+      "low":         { "en": "Falling", "ja": "低下中" },
+      "high":        { "en": "Rising",  "ja": "上昇中" }
+    },
+    "exchange_rate": {
+      "name":        { "en": "Exchange Rate",                                              "ja": "為替レート" },
+      "description": { "en": "How much your currency is worth compared to others.",        "ja": "自国通貨の他通貨に対する価値。" },
+      "low":         { "en": "Weaker",   "ja": "下落" },
+      "high":        { "en": "Stronger", "ja": "上昇" }
+    },
+    "gdp_growth": {
+      "name":        { "en": "GDP Growth",                                "ja": "GDP成長率" },
+      "description": { "en": "How fast the overall economy is growing.",  "ja": "経済全体の成長速度。" },
+      "low":         { "en": "Contracting", "ja": "縮小中" },
+      "high":        { "en": "Growing",     "ja": "成長中" }
+    },
+    "stock_market": {
+      "name":        { "en": "Stock Market",                                                       "ja": "株式市場" },
+      "description": { "en": "Overall value of company shares in the stock market.",               "ja": "株式市場における企業株式の総合的な価値。" },
+      "low":         { "en": "Bear Market", "ja": "弱気相場" },
+      "high":        { "en": "Bull Market", "ja": "強気相場" }
+    },
+    "government_spending": {
+      "name":        { "en": "Government Spending",                                                "ja": "政府支出" },
+      "description": { "en": "How much the government spends relative to the economy size.",       "ja": "経済規模に対する政府の支出水準。" },
+      "low":         { "en": "Reduced",   "ja": "削減" },
+      "high":        { "en": "Increased", "ja": "拡大" }
+    },
+    "consumer_confidence": {
+      "name":        { "en": "Consumer Confidence",                           "ja": "消費者信頼感" },
+      "description": { "en": "How optimistic people feel about the economy.", "ja": "人々の経済に対する楽観度。" },
+      "low":         { "en": "Pessimistic", "ja": "悲観的" },
+      "high":        { "en": "Optimistic",  "ja": "楽観的" }
+    },
+    "bond_yields": {
+      "name":        { "en": "Bond Yields",                           "ja": "国債利回り" },
+      "description": { "en": "Interest rates on government bonds.",   "ja": "国債の金利。" },
+      "low":         { "en": "Lower",  "ja": "低下" },
+      "high":        { "en": "Higher", "ja": "上昇" }
+    },
+    "consumer_spending": {
+      "name":        { "en": "Consumer Spending",                                                  "ja": "個人消費" },
+      "description": { "en": "How much money households spend on goods and services.",             "ja": "家計が商品やサービスに支出する金額。" },
+      "low":         { "en": "Lower",  "ja": "低下" },
+      "high":        { "en": "Higher", "ja": "上昇" }
+    }
+  }
+}

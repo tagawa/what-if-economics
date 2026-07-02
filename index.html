@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>what if… economics - Economic Impact Simulator</title>
+    <meta name="description" content="Interactive tool to understand how economic factors influence each other.">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/gtk.css">
+    <noscript>
+      <style>#loading-indicator { display: none; }</style>
+    </noscript>
+    
+    <!-- Fathom - beautiful, simple website analytics -->
+    <script src="https://cdn.usefathom.com/script.js" data-site="UGQPSHWJ" defer></script>
+    <!-- / Fathom -->
+</head>
+<body>
+    <!-- Loading indicator -->
+    <div id="loading-indicator">
+        <div class="spinner-wrapper" role="status" aria-label="Loading">
+            <div class="spinner"></div>
+        </div>
+    </div>
+    
+
+    <div id="app">
+      <noscript>
+        <p class="noscript-msg">This interactive simulator needs JavaScript. The reference notes near the bottom of this page still work without it.</p>
+      </noscript>
+      <p id="boot-fallback" class="noscript-msg" style="display:none;">This app could not start in this browser. It may be too old, or a script failed to load. The reference notes near the bottom of this page still work.</p>
+      <div id="a11y-live" class="visually-hidden" aria-live="polite" role="status"></div>
+      <header>
+        <h1>what if… economics</h1>
+        <div id="control"></div>
+      </header>
+      <p id="factor-hint" class="factor-hint"></p>
+      <div id="factors"></div>
+      <div id="scenarios"></div>
+      <details id="notes">
+          <summary>Notes: Important Nuances and Conditions</summary>
+          <h3>General Principles:</h3>
+          <ul>
+              <li>Time Lags: Effects of policy changes (like interest rates) may take months or years to fully impact the economy</li>
+              <li>External Shocks: Events such as wars, pandemics, or natural disasters can disrupt these relationships</li>
+              <li>Expectations Matter: People's and businesses' expectations about the future can influence how these variables interact</li>
+              <li>Global Influences: International trade, global markets, and foreign policies can affect domestic economic outcomes</li>
+              <li>Policy Mix: The impact of one variable (e.g., interest rates) can depend on other policies in place (like government spending)</li>
+              <li>Nonlinear Effects: Relationships may not always be proportional; small changes can sometimes have big effects, or vice versa</li>
+              <li>Short vs. Long Term: Some relationships (like inflation and unemployment) may differ in the short run compared to the long run</li>
+              <li>Sector Differences: Some industries or groups may be affected differently by the same economic change</li>
+              <li>Unintended Consequences: Policies can sometimes have side effects not captured by simple relationships</li>
+          </ul>
+          
+          <h3>Specific Conditions and Exceptions:</h3>
+          <h4>Interest Rates & Bond Yields:</h4>
+          <ul>
+              <li>Effects weaken when rates are already very low (near zero)</li>
+              <li>May have limited impact during financial crises when credit markets freeze</li>
+              <li>Bond yields can be influenced by central bank purchases (quantitative easing)</li>
+          </ul>
+          
+          <h4>Inflation:</h4>
+          <ul>
+              <li>Supply shocks (oil prices, natural disasters) can cause inflation that doesn't follow normal patterns</li>
+              <li>Very low inflation or deflation can make relationships behave differently</li>
+              <li>Inflation expectations often matter as much as actual inflation</li>
+          </ul>
+          
+          <h4>Government Spending:</h4>
+          <ul>
+              <li>Effects are stronger during recessions when private sector is weak</li>
+              <li>Long-term spending may "crowd out" private investment</li>
+              <li>Impact depends on how spending is financed (taxes vs. borrowing)</li>
+          </ul>
+          
+          <h4>Exchange Rates:</h4>
+          <ul>
+              <li>Safe-haven currencies (like the Swiss franc) may strengthen during global uncertainty regardless of domestic conditions</li>
+              <li>Effects on trade and growth take time as contracts and supply chains adjust</li>
+          </ul>
+          
+          <h4>Stock Markets:</h4>
+          <ul>
+              <li>Can be driven by investor sentiment and global events, not just economic fundamentals</li>
+              <li>May rise during economic uncertainty if investors expect policy support</li>
+              <li>Technology and sector changes can override broader economic trends</li>
+          </ul>
+      </details>
+    </div>
+
+    <!-- ES5 boot-failure fallback. Its own <script>, ES5 only, so it still runs
+         when the app scripts below fail to parse (browser too old for their
+         syntax) or fail to load. If the app has not removed the spinner within
+         the timeout, show a static message in its place. -->
+    <script>
+      (function () {
+        var TIMEOUT_MS = 8000; // ceiling above worst-case real boot on a slow legacy device
+        setTimeout(function () {
+          var spinner = document.getElementById('loading-indicator');
+          if (!spinner) return; // app booted and removed it; nothing to do
+          if (spinner.parentNode) spinner.parentNode.removeChild(spinner);
+          var msg = document.getElementById('boot-fallback');
+          if (msg) msg.style.display = 'block';
+        }, TIMEOUT_MS);
+      })();
+    </script>
+    <!-- Load simplified JavaScript files -->
+    <script src="js/i18n.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

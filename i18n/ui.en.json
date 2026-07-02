@@ -1,0 +1,32 @@
+{
+  "page": {
+    "title": "what if… economics - Economic Impact Simulator"
+  },
+  "header": {
+    "lang_switcher_label": "Switch language",
+    "btn_beginner":        "Beginner Mode",
+    "btn_beginner_exit":   "Exit Beginner Mode",
+    "btn_reset_all":       "Reset All"
+  },
+  "factor": {
+    "status_neutral":  "No change",
+    "btn_lower":       "Lower",
+    "btn_reset":       "Reset",
+    "btn_higher":      "Higher",
+    "btn_lower_title": "Lower {name}",
+    "btn_reset_title": "Reset {name}",
+    "btn_raise_title": "Raise {name}",
+    "hint": "Adjust one factor at a time, lower or higher, to see its effects, or try a preset scenario below."
+  },
+  "scenarios": {
+    "heading": "Preset Scenarios"
+  },
+  "error": {
+    "heading":   "Failed to load the app",
+    "btn_retry": "Try Again",
+    "body":      "Error: {message}"
+  },
+  "notes": {
+    "html": "<summary>Notes: Important Nuances and Conditions</summary><h3>General Principles:</h3><ul><li>Time Lags: Effects of policy changes (like interest rates) may take months or years to fully impact the economy</li><li>External Shocks: Events such as wars, pandemics, or natural disasters can disrupt these relationships</li><li>Expectations Matter: People's and businesses' expectations about the future can influence how these variables interact</li><li>Global Influences: International trade, global markets, and foreign policies can affect domestic economic outcomes</li><li>Policy Mix: The impact of one variable (e.g., interest rates) can depend on other policies in place (like government spending)</li><li>Nonlinear Effects: Relationships may not always be proportional; small changes can sometimes have big effects, or vice versa</li><li>Short vs. Long Term: Some relationships (like inflation and unemployment) may differ in the short run compared to the long run</li><li>Sector Differences: Some industries or groups may be affected differently by the same economic change</li><li>Unintended Consequences: Policies can sometimes have side effects not captured by simple relationships</li></ul><h3>Specific Conditions and Exceptions:</h3><h4>Interest Rates &amp; Bond Yields:</h4><ul><li>Effects weaken when rates are already very low (near zero)</li><li>May have limited impact during financial crises when credit markets freeze</li><li>Bond yields can be influenced by central bank purchases (quantitative easing)</li></ul><h4>Inflation:</h4><ul><li>Supply shocks (oil prices, natural disasters) can cause inflation that doesn't follow normal patterns</li><li>Very low inflation or deflation can make relationships behave differently</li><li>Inflation expectations often matter as much as actual inflation</li></ul><h4>Government Spending:</h4><ul><li>Effects are stronger during recessions when private sector is weak</li><li>Long-term spending may &quot;crowd out&quot; private investment</li><li>Impact depends on how spending is financed (taxes vs. borrowing)</li></ul><h4>Exchange Rates:</h4><ul><li>Safe-haven currencies (like the Swiss franc) may strengthen during global uncertainty regardless of domestic conditions</li><li>Effects on trade and growth take time as contracts and supply chains adjust</li></ul><h4>Stock Markets:</h4><ul><li>Can be driven by investor sentiment and global events, not just economic fundamentals</li><li>May rise during economic uncertainty if investors expect policy support</li><li>Technology and sector changes can override broader economic trends</li></ul>"
+  }
+}

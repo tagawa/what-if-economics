@@ -1,0 +1,36 @@
+{
+  "scenarios": {
+    "rate_hike": {
+      "name":    { "en": "Central Bank Raises Interest Rates", "ja": "中央銀行が金利を引き上げる" },
+      "changes": { "interest_rate": 1 }
+    },
+    "inflation_surge": {
+      "name":    { "en": "Inflation Surge",           "ja": "インフレの急騰" },
+      "changes": { "inflation": 1 }
+    },
+    "recession_start": {
+      "name":    { "en": "Economic Recession Begins", "ja": "経済後退の始まり" },
+      "changes": { "gdp_growth": -1 }
+    },
+    "stimulus_spending": {
+      "name":    { "en": "Government Stimulus Package", "ja": "政府の経済刺激策" },
+      "changes": { "government_spending": 1 }
+    },
+    "currency_crisis": {
+      "name":    { "en": "Currency Devaluation", "ja": "通貨の切り下げ" },
+      "changes": { "exchange_rate": -1 }
+    },
+    "market_crash": {
+      "name":    { "en": "Stock Market Crash", "ja": "株式市場の崩壊" },
+      "changes": { "stock_market": -1 }
+    },
+    "unemployment_spike": {
+      "name":    { "en": "Unemployment Rises",        "ja": "失業率の急上昇" },
+      "changes": { "unemployment": 1 }
+    },
+    "confidence_boost": {
+      "name":    { "en": "Consumer Confidence Surge", "ja": "消費者信頼感の急上昇" },
+      "changes": { "consumer_confidence": 1 }
+    }
+  }
+}

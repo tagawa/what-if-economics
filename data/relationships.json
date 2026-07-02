@@ -1,0 +1,196 @@
+{
+  "relationships": {
+    "interest_rate": {
+      "inflation": {
+        "direction": "negative",
+        "explanation": "Higher interest rates make borrowing more expensive, reducing spending and cooling down price increases."
+      },
+      "unemployment": {
+        "direction": "positive",
+        "explanation": "Higher interest rates slow economic activity, making it harder for businesses to expand and hire workers."
+      },
+      "exchange_rate": {
+        "direction": "positive",
+        "explanation": "Higher interest rates attract foreign investors, increasing demand for the currency."
+      },
+      "gdp_growth": {
+        "direction": "negative",
+        "explanation": "Higher interest rates reduce borrowing and spending, slowing overall economic growth."
+      },
+      "stock_market": {
+        "direction": "negative",
+        "explanation": "Higher interest rates make bonds more attractive than stocks, and reduce company profits."
+      },
+      "consumer_confidence": {
+        "direction": "negative",
+        "explanation": "Higher interest rates make loans more expensive, making consumers feel less optimistic about spending."
+      },
+      "bond_yields": {
+        "direction": "positive",
+        "explanation": "Central bank rate changes directly influence bond market pricing"
+      },
+      "consumer_spending": {
+        "direction": "negative",
+        "explanation": "Higher rates increase loan costs (mortgages, credit cards), reducing disposable income."
+      }
+    },
+    "inflation": {
+      "consumer_confidence": {
+        "direction": "negative",
+        "explanation": "Rising prices make people feel poorer and more worried about their finances."
+      },
+      "exchange_rate": {
+        "direction": "negative",
+        "explanation": "High inflation makes a currency less attractive to foreign investors."
+      },
+      "stock_market": {
+        "direction": "negative",
+        "explanation": "Inflation erodes company profits and makes investors nervous about the future."
+      },
+      "interest_rate": {
+        "direction": "positive",
+        "explanation": "High inflation often prompts central banks to raise interest rates to cool the economy."
+      },
+      "bond_yields": {
+        "direction": "positive", 
+        "explanation": "Higher inflation expectations push bond yields up as investors demand compensation"
+      }
+    },
+    "unemployment": {
+      "consumer_confidence": {
+        "direction": "negative",
+        "explanation": "High unemployment makes people worry about job security and their financial future."
+      },
+      "gdp_growth": {
+        "direction": "negative",
+        "explanation": "High unemployment means less consumer spending, which slows economic growth."
+      },
+      "inflation": {
+        "direction": "negative",
+        "explanation": "High unemployment reduces demand for goods and services, keeping prices low."
+      }
+    },
+    "gdp_growth": {
+      "unemployment": {
+        "direction": "negative",
+        "explanation": "Economic growth creates jobs as businesses expand and hire more workers."
+      },
+      "consumer_confidence": {
+        "direction": "positive",
+        "explanation": "Economic growth makes people feel optimistic about job prospects and income."
+      },
+      "stock_market": {
+        "direction": "positive",
+        "explanation": "Economic growth increases company profits and investor optimism."
+      },
+      "inflation": {
+        "direction": "positive",
+        "explanation": "Strong economic growth can lead to higher demand and rising prices."
+      }
+    },
+    "government_spending": {
+      "gdp_growth": {
+        "direction": "positive",
+        "explanation": "Government spending directly adds to economic activity and creates jobs."
+      },
+      "inflation": {
+        "direction": "positive",
+        "explanation": "More government spending increases demand for goods and services, pushing prices up."
+      },
+      "unemployment": {
+        "direction": "negative",
+        "explanation": "Government spending creates jobs directly and stimulates private sector hiring."
+      },
+      "consumer_confidence": {
+        "direction": "positive",
+        "explanation": "Government spending signals economic support, making people feel more secure."
+      },
+      "consumer_spending": {
+        "direction": "positive",
+        "explanation": "Transfer payments (e.g., unemployment benefits) directly boost household spending."
+      }
+    },
+    "exchange_rate": {
+      "inflation": {
+        "direction": "negative",
+        "explanation": "A stronger currency makes imports cheaper, reducing overall price levels."
+      },
+      "gdp_growth": {
+        "direction": "negative",
+        "explanation": "A stronger currency makes exports more expensive, hurting economic growth."
+      },
+      "unemployment": {
+        "direction": "positive",
+        "explanation": "Strong currency can hurt export industries and cost jobs."
+      }
+    },
+    "stock_market": {
+      "consumer_confidence": {
+        "direction": "positive",
+        "explanation": "Rising stock prices make people feel wealthier and more optimistic."
+      },
+      "gdp_growth": {
+        "direction": "positive",
+        "explanation": "Higher stock prices make it easier for companies to raise money and invest."
+      },
+      "unemployment": {
+        "direction": "negative",
+        "explanation": "Stock market growth often leads to business expansion and job creation."
+      }
+    },
+    "consumer_confidence": {
+      "gdp_growth": {
+        "direction": "positive",
+        "explanation": "Confident consumers spend more money, boosting economic activity."
+      },
+      "stock_market": {
+        "direction": "positive",
+        "explanation": "Confident consumers drive business profits, making stocks more attractive."
+      },
+      "unemployment": {
+        "direction": "negative",
+        "explanation": "High consumer confidence encourages business expansion and hiring."
+      },
+      "consumer_spending": {
+        "direction": "positive",
+        "explanation": "Confident consumers are more likely to make large purchases."
+      }
+    },
+    "bond_yields": {
+      "interest_rate": {
+        "direction": "positive",
+        "explanation": "Central bank policy rates influence short-term yields, with effects transmitting along the yield curve"
+      },
+      "inflation": {
+        "direction": "negative", 
+        "explanation": "Higher yields increase borrowing costs, cooling economic activity and price pressures"
+      },
+      "stock_market": {
+        "direction": "negative",
+        "explanation": "Higher yields make bonds more attractive relative to stocks and increase discount rates for equity valuations"
+      },
+      "gdp_growth": {
+        "direction": "negative",
+        "explanation": "Higher yields increase borrowing costs for businesses and consumers, reducing investment and spending"
+      },
+      "exchange_rate": {
+        "direction": "positive",
+        "explanation": "Higher yields attract foreign capital, strengthening the currency"
+      }
+    },
+    "consumer_spending": {
+      "gdp_growth": {
+        "direction": "positive",
+        "explanation": "Consumer spending is the largest component of GDP in most economies."
+      },
+      "inflation": {
+        "direction": "positive",
+        "explanation": "Increased spending raises demand for goods/services, pushing prices up."
+      },
+      "unemployment": {
+        "direction": "negative",
+        "explanation": "Higher spending allows businesses to expand and hire more workers."
+      }
+    }
+  }
+}

@@ -1,0 +1,457 @@
+/* GTK / GNOME Adwaita theme */
+/* Cantarell is available as a system font on GNOME; no external load needed */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Cantarell', 'Noto Sans', system-ui, sans-serif;
+  font-size: 10pt;
+  line-height: 1.6;
+  color: #1d1d1d;
+  background-color: #f0eeea;
+  min-height: 100vh;
+}
+
+#app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+#loading-indicator {
+  text-align: center;
+  padding: 50px;
+  font-family: 'Cantarell', system-ui, sans-serif;
+  color: #1d1d1d;
+}
+.spinner-wrapper {
+  margin-top: 20px;
+}
+.spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #c7c3bb;
+  border-top-color: #3584e4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0%  { transform: rotate(0deg); }
+  100%{ transform: rotate(360deg); }
+}
+
+/* Adwaita HeaderBar */
+header {
+  background: linear-gradient(180deg, #fafafa 0%, #f0eeea 100%);
+  border: 1px solid #c7c3bb;
+  border-radius: 12px 12px 12px 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 47px;
+}
+
+header h1 {
+  color: #1d1d1d;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+/* #control — single-row action cluster on the right of the header */
+#control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+/* Spacing via margins, not flex `gap` — flex-gap is only widely supported from ~2021,
+   below the older-device baseline we want to cover. */
+#control > * + * {
+  margin-left: 8px;
+}
+
+/* Adwaita neutral button — quiet default for Beginner Mode, Reset All, and inactive
+   language segments. Mirrors the scenario buttons. #1d1d1d on #ffffff clears WCAG AAA;
+   the accent is reserved for the active language segment. */
+header button {
+  background: #ffffff;
+  color: #1d1d1d;
+  border: 1px solid #c7c3bb;
+  border-radius: 6px;
+  padding: 7px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+header button:hover {
+  background: #f0eeea;
+  border-color: #b0aba3;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.22);
+}
+header button:active {
+  background: #f0eeea;
+  box-shadow: none;
+}
+/* Keyboard focus ring with a fallback for browsers lacking :focus-visible
+   (Safari < 15.4). Plain :focus shows the ring everywhere; modern browsers
+   then suppress it for mouse/touch focus via :not(:focus-visible). */
+header button:focus {
+  outline: 2px solid #1a5fb4;
+  outline-offset: 2px;
+}
+header button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Language switcher — Adwaita linked/segmented toggle. Buttons share a border; the
+   active segment (aria-current="true") carries the accent fill. */
+#lang-switcher {
+  display: inline-flex;
+}
+#lang-switcher button {
+  border-radius: 0;
+  box-shadow: none;
+}
+#lang-switcher button:hover {
+  box-shadow: none;
+}
+#lang-switcher button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+#lang-switcher button:last-child {
+  border-radius: 0 6px 6px 0;
+}
+#lang-switcher button:not(:first-child) {
+  margin-left: -1px; /* overlap the shared border so the pair reads as one control */
+}
+#lang-switcher button[aria-current="true"] {
+  position: relative;
+  z-index: 1; /* keep the accent border above the overlapped neighbour */
+  background: #1a5fb4;
+  color: #ffffff;
+  border-color: #1a5fb4;
+}
+#lang-switcher button[aria-current="true"]:hover {
+  background: #1655a0;
+  border-color: #1655a0;
+}
+
+/* GtkFrame / card style */
+#scenarios, #notes {
+  background: #ffffff;
+  border: 1px solid #c7c3bb;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  padding: 18px;
+  margin-bottom: 24px;
+}
+
+#scenarios h3 {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #5e5c64;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+#scenarios button {
+  background: #ffffff;
+  border: 1px solid #c7c3bb;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #1d1d1d;
+  transition: background-color 0.12s, border-color 0.12s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.07);
+}
+#scenarios button:hover {
+  background: #f0eeea;
+  border-color: #b0aba3;
+}
+
+#factors {
+  align-items: stretch;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 5fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* GtkCard style */
+.factor-card {
+  background: #ffffff;
+  border: 1px solid #c7c3bb;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  padding: 18px;
+  transition: box-shadow 0.15s;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+}
+.factor-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.factor-card.pulse {
+  box-shadow: 0 0 0 3px rgba(53, 132, 228, 0.35);
+}
+.factor-card.increase {
+  border-left: 3px solid #26a269;
+  background: #f4faf6;
+}
+.factor-card.decrease {
+  border-left: 3px solid #e01b24;
+  background: #fdf4f4;
+}
+
+.factor-card h3 {
+  height: 2.5em;
+  text-align: center;
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1d1d1d;
+}
+
+.factor-description {
+  height: 3.5em;
+  font-size: 0.8rem;
+  color: #5e5c64;
+  line-height: 1.4;
+  margin: 8px 0 0 0;
+  text-align: center;
+}
+
+.factor-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  min-height: 48px;
+}
+.factor-status.neutral {
+  background: #f0eeea;
+  color: #5e5c64;
+  border: 1px solid #d6d2cc;
+}
+.factor-status.increase {
+  background: #dbf1e0;
+  color: #1a7340;
+  border: 1px solid #26a269;
+}
+.factor-status.decrease {
+  background: #fde0e0;
+  color: #a51d2d;
+  border: 1px solid #e01b24;
+}
+
+.status-icon {
+  font-size: 1.3rem;
+  margin-right: 8px;
+  font-weight: bold;
+}
+.status-text {
+  font-size: 0.9rem;
+}
+
+.factor-controls {
+  display: flex;
+  margin: 12px 0;
+  justify-content: center;
+}
+/* margin instead of flex `gap` for older-browser support */
+.factor-controls > * + * {
+  margin-left: 6px;
+}
+
+/* GtkButton style — flat inside cards */
+.control-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid #c7c3bb;
+  border-radius: 6px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.12s, border-color 0.12s;
+  min-width: 56px;
+  font-family: inherit;
+  color: #1d1d1d;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.control-btn:hover {
+  background: #f0eeea;
+  border-color: #b0aba3;
+}
+.control-btn:active {
+  background: #e4e1dc;
+  box-shadow: none;
+}
+.control-btn:focus {
+  outline: 3px solid #1a5fb4;
+  outline-offset: 2px;
+}
+
+.btn-icon {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 2px;
+  line-height: 1;
+}
+.btn-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.increase-btn {
+  border-color: #b6dfc7;
+  color: #1a7340;
+}
+.increase-btn:hover {
+  background: #f4faf6;
+  border-color: #26a269;
+}
+.decrease-btn {
+  border-color: #f5bfbf;
+  color: #a51d2d;
+}
+.decrease-btn:hover {
+  background: #fdf4f4;
+  border-color: #e01b24;
+}
+.reset-btn {
+  border-color: #c7c3bb;
+  color: #5e5c64;
+}
+.reset-btn:hover {
+  background: #f0eeea;
+}
+
+.factor-bottom {
+  margin-top: auto;
+}
+
+#notes summary {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1d1d1d;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+#notes h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #5e5c64;
+  margin: 14px 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+#notes h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #3d3846;
+  margin: 10px 0 4px;
+}
+#notes ul {
+  padding-left: 18px;
+}
+#notes li {
+  font-size: 0.875rem;
+  color: #3d3846;
+  margin-bottom: 3px;
+}
+
+@media (max-width: 768px) {
+  header { flex-direction: column; }
+  header > * + * { margin-top: 12px; } /* column spacing without flex `gap` */
+  #factors { grid-template-columns: 1fr; }
+  #scenarios button { display: block; width: 100%; margin: 8px 0; }
+  .factor-controls > * + * { margin-left: 5px; }
+  .control-btn { padding: 8px 10px; }
+  .btn-icon { font-size: 1.2rem; }
+  .btn-text { font-size: 0.65rem; }
+  .factor-card { min-height: 200px; }
+  .factor-status { padding: 10px; font-size: 0.9rem; }
+  .status-icon { font-size: 1.1rem; margin-right: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .factor-card { border: 2px solid #1d1d1d; }
+  .factor-status.increase { background: #c8f0d4; border: 2px solid #1a7340; }
+  .factor-status.decrease { background: #f8cccc; border: 2px solid #a51d2d; }
+  .control-btn { border-width: 2px; }
+}
+
+@media (max-width: 1000px) {
+  #factors { grid-template-columns: repeat(auto-fit, minmax(200px, 2fr)); }
+}
+@media (max-width: 400px) {
+  #factors { grid-template-columns: 1fr; }
+}
+
+/* Screen-reader-only live region (used by ripple announcements) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* No-JS fallback banner */
+.noscript-msg {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border: 1px solid #c7c3bb;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1d1d1d;
+}
+
+.factor-hint {
+  font-size: 0.8rem;
+  color: #5e5c64;
+  margin: 0 0 16px;
+}
