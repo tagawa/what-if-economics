@@ -1,6 +1,6 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert/strict');
-const { CORE_FACTORS, scenarioFitsBeginnerMode, resolveInitialBeginnerMode } = require('../js/app.js');
+const { CORE_FACTORS, scenarioFitsBeginnerMode, resolveInitialBeginnerMode, buildBeginnerSearch } = require('../js/app.js');
 const scenarios = require('../data/scenarios.json').scenarios;
 
 describe('scenarioFitsBeginnerMode', () => {
@@ -28,16 +28,38 @@ describe('scenarioFitsBeginnerMode', () => {
 });
 
 describe('resolveInitialBeginnerMode', () => {
-  test('?mode=beginner forces beginner on, regardless of saved pref', () => {
+  test('?pagename=beginner forces beginner on, regardless of saved pref', () => {
     assert.equal(resolveInitialBeginnerMode('beginner', false), true);
     assert.equal(resolveInitialBeginnerMode('beginner', true), true);
   });
 
-  test('no/other mode param falls through to the saved preference', () => {
+  test('no/other pagename param falls through to the saved preference', () => {
     assert.equal(resolveInitialBeginnerMode(null, true), true);
     assert.equal(resolveInitialBeginnerMode(null, false), false);
     assert.equal(resolveInitialBeginnerMode('full', true), true);
     assert.equal(resolveInitialBeginnerMode('full', false), false);
     assert.equal(resolveInitialBeginnerMode('anything', false), false);
+  });
+});
+
+describe('buildBeginnerSearch', () => {
+  test('enabling adds ?pagename=beginner', () => {
+    assert.equal(buildBeginnerSearch('', true), '?pagename=beginner');
+  });
+
+  test('enabling preserves other params (e.g. ?lang)', () => {
+    assert.equal(buildBeginnerSearch('?lang=ja', true), '?lang=ja&pagename=beginner');
+  });
+
+  test('enabling is idempotent when pagename already present', () => {
+    assert.equal(buildBeginnerSearch('?pagename=beginner', true), '?pagename=beginner');
+  });
+
+  test('disabling removes pagename but keeps other params', () => {
+    assert.equal(buildBeginnerSearch('?lang=ja&pagename=beginner', false), '?lang=ja');
+  });
+
+  test('disabling down to no params returns an empty string (not a bare "?")', () => {
+    assert.equal(buildBeginnerSearch('?pagename=beginner', false), '');
   });
 });

@@ -28,7 +28,6 @@ const EVENT_NAMES = [
   'Reset factors',
   'Switched language: ',      // + locale
   'Opened notes',
-  'Arrived via beginner link',
 ];
 
 test('every Fathom event name appears verbatim in js/app.js', () => {
@@ -46,7 +45,7 @@ test('js/app.js still wires Fathom tracking', () => {
   assert.ok(src.includes('trackEvent'), 'expected a window.fathom.trackEvent call in app.js');
   assert.equal(
     EVENT_NAMES.length,
-    8,
+    7,
     'Pinned event count changed. This is NOT a build breakage: if you deliberately ' +
       'added or removed a Fathom event, update this count (and EVENT_NAMES) on purpose.'
   );
