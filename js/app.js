@@ -13,12 +13,24 @@ function scenarioFitsBeginnerMode(scenario, coreFactors) {
   return Object.keys(scenario.changes).every(id => coreFactors.includes(id));
 }
 
-// Decide the initial Beginner Mode state at load. A ?mode=beginner URL forces it on for
+// Decide the initial Beginner Mode state at load. A ?pagename=beginner URL forces it on for
 // that visit (shareable link); otherwise honour the saved preference. The URL never
 // overwrites the stored preference — it only wins for the current load.
-function resolveInitialBeginnerMode(modeValue, savedPref) {
-  if (modeValue === 'beginner') return true;
+function resolveInitialBeginnerMode(pagenameValue, savedPref) {
+  if (pagenameValue === 'beginner') return true;
   return savedPref;
+}
+
+// Keep the URL query string in sync with Beginner Mode: set/unset pagename=beginner while
+// preserving any other params (e.g. ?lang). Returns '' rather than a bare '?' when empty.
+// The param is `pagename` so Fathom logs the state change as a /?pagename=beginner pageview
+// — Fathom reads a pageview's query string from location, not from trackPageview() args.
+function buildBeginnerSearch(currentSearch, beginnerOn) {
+  const params = new URLSearchParams(currentSearch);
+  if (beginnerOn) params.set('pagename', 'beginner');
+  else params.delete('pagename');
+  const qs = params.toString();
+  return qs ? '?' + qs : '';
 }
 
 class EconRipple {
@@ -43,12 +55,12 @@ class EconRipple {
 
       this.state = new EconState(this.data.getBaselineState());
 
-      // ?mode=beginner (shareable link) wins for this load; otherwise the saved preference.
+      // ?pagename=beginner (shareable link) wins for this load; otherwise the saved preference.
       // The URL is NOT persisted — this must not route through toggleBeginnerMode(), which
       // owns the Enabled/Exited beginner mode events (those mean user action only).
       const savedBeginner = this.state.getPreference('beginnerMode', false);
-      this.urlMode = new URLSearchParams(location.search).get('mode'); // read once; reused for the arrival event
-      this.isBeginnerMode = resolveInitialBeginnerMode(this.urlMode, savedBeginner);
+      const urlPagename = new URLSearchParams(location.search).get('pagename');
+      this.isBeginnerMode = resolveInitialBeginnerMode(urlPagename, savedBeginner);
 
       this.createUI();
     } catch (error) {
@@ -162,13 +174,6 @@ class EconRipple {
     document.getElementById('notes').addEventListener('toggle', (e) => {
       if (e.target.open) this.track('Opened notes');
     });
-
-    // Count arrivals via a shared ?mode=beginner link. Pairs with the /?mode=beginner
-    // pageview (data-canonical="false") for cross-checking. Reuses this.urlMode read in
-    // init(). Fires after DOMContentLoaded + data load, so window.fathom is defined.
-    if (this.urlMode === 'beginner') {
-      this.track('Arrived via beginner link');
-    }
   }
 
   renderFactors() {
@@ -367,6 +372,14 @@ class EconRipple {
     this.isBeginnerMode = !this.isBeginnerMode;
     this.state.savePreference('beginnerMode', this.isBeginnerMode);
     this.track(this.isBeginnerMode ? 'Enabled beginner mode' : 'Exited beginner mode');
+
+    // Mirror the toggle in the URL (shareable state) and, on enable, log a
+    // /?pagename=beginner pageview so in-app activations join shared-link arrivals in the
+    // same Pages row. replaceState (not push) so the back button isn't polluted.
+    const search = buildBeginnerSearch(location.search, this.isBeginnerMode);
+    history.replaceState(null, '', location.pathname + search + location.hash);
+    if (this.isBeginnerMode && window.fathom) window.fathom.trackPageview({ url: location.href });
+
     this.renderFactors();
 
     const button = document.getElementById('btn-beginner');
@@ -410,7 +423,7 @@ class EconRipple {
 
 // In Node (tests) export the pure helpers; in the browser bootstrap the app.
 if (typeof module !== 'undefined') {
-  module.exports = { CORE_FACTORS, scenarioFitsBeginnerMode, resolveInitialBeginnerMode };
+  module.exports = { CORE_FACTORS, scenarioFitsBeginnerMode, resolveInitialBeginnerMode, buildBeginnerSearch };
 } else {
   const app = new EconRipple();
   document.addEventListener('DOMContentLoaded', () => app.init());
