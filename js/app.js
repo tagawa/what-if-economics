@@ -33,6 +33,18 @@ function buildBeginnerSearch(currentSearch, beginnerOn) {
   return qs ? '?' + qs : '';
 }
 
+// Which factor cards are rendered right now. Beginner Mode shows only the core
+// five; the full view shows everything.
+function visibleFactorIds(allFactorIds, isBeginnerMode, coreFactors) {
+  return isBeginnerMode ? allFactorIds.filter(id => coreFactors.includes(id)) : allFactorIds;
+}
+
+// Ripple summary for the live region. Only factors with a rendered card are
+// announced, so screen reader users hear exactly what sighted users can see.
+function buildRippleSummary(targetIds, visibleIds, describe) {
+  return targetIds.filter(id => visibleIds.includes(id)).map(describe).join(', ');
+}
+
 class EconRipple {
   constructor() {
     this.data = new EconData();
@@ -179,9 +191,7 @@ class EconRipple {
   renderFactors() {
     const container = document.getElementById('factors');
     const factorIds = Object.keys(this.data.factors);
-    const visibleFactors = this.isBeginnerMode
-      ? factorIds.filter(id => CORE_FACTORS.includes(id))
-      : factorIds;
+    const visibleFactors = visibleFactorIds(factorIds, this.isBeginnerMode, CORE_FACTORS);
 
     container.innerHTML = visibleFactors.map(factorId => {
       const name = this.data.getFactorName(factorId);
@@ -233,7 +243,9 @@ class EconRipple {
     // Set the factor to the new state
     this.state.set(factorId, newState);
 
-    // Announce the user's own adjustment immediately.
+    // Announce the user's own adjustment immediately. No visibility filter needed:
+    // this card is always rendered — the user clicked it, or applyScenario triggered
+    // it and scenarioFitsBeginnerMode already guarantees a core factor.
     this.announce(this.data.getFactorName(factorId) + ': ' + this.data.getFactorLabel(factorId, newState));
 
     // Get relationships and reset unaffected factors
@@ -274,12 +286,12 @@ class EconRipple {
     if (Object.keys(relationships).length > 0) {
       const self = this;
       setTimeout(function () {
-        const summary = Object.keys(relationships)
-          .map(function (id) {
-            return self.data.getFactorName(id) + ': ' + self.data.getFactorLabel(id, self.state.get(id));
-          })
-          .join(', ');
-        self.announce(summary);
+        const visible = visibleFactorIds(Object.keys(self.data.factors), self.isBeginnerMode, CORE_FACTORS);
+        const summary = buildRippleSummary(Object.keys(relationships), visible, function (id) {
+          return self.data.getFactorName(id) + ': ' + self.data.getFactorLabel(id, self.state.get(id));
+        });
+        // Empty when every ripple target is hidden in Beginner Mode; announcing '' is noise.
+        if (summary) self.announce(summary);
       }, this.delays.medium);
     }
   }
@@ -423,7 +435,7 @@ class EconRipple {
 
 // In Node (tests) export the pure helpers; in the browser bootstrap the app.
 if (typeof module !== 'undefined') {
-  module.exports = { CORE_FACTORS, scenarioFitsBeginnerMode, resolveInitialBeginnerMode, buildBeginnerSearch };
+  module.exports = { CORE_FACTORS, scenarioFitsBeginnerMode, resolveInitialBeginnerMode, buildBeginnerSearch, visibleFactorIds, buildRippleSummary };
 } else {
   const app = new EconRipple();
   document.addEventListener('DOMContentLoaded', () => app.init());
