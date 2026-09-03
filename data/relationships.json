@@ -3,201 +3,336 @@
     "interest_rate": {
       "inflation": {
         "direction": "negative",
-        "explanation": "Higher interest rates make borrowing more expensive, reducing spending and cooling down price increases."
+        "explanation": {
+          "en": "Rates and inflation move in opposite directions: dearer borrowing cools spending, and cooler spending cools prices.",
+          "ja": "金利とインフレは逆方向に動きます。借入コストが上がると支出が冷え込み、物価の上昇も鈍ります。"
+        }
       },
       "unemployment": {
         "direction": "positive",
-        "explanation": "Higher interest rates slow economic activity, making it harder for businesses to expand and hire workers."
+        "explanation": {
+          "en": "Rates and unemployment move together: costlier borrowing slows activity, and slower activity means less hiring.",
+          "ja": "金利と失業率は同じ方向に動きます。借入コストが上がると経済活動が鈍り、企業の採用も減ります。"
+        }
       },
       "exchange_rate": {
         "direction": "positive",
-        "explanation": "Higher interest rates attract foreign investors, increasing demand for the currency."
+        "explanation": {
+          "en": "Rates and the exchange rate move together: better returns on deposits draw in foreign investors, who must buy the currency first.",
+          "ja": "金利と為替レートは同じ方向に動きます。預金の利回りが上がると海外投資家が集まり、そのために自国通貨が買われます。"
+        }
       },
       "gdp_growth": {
         "direction": "negative",
-        "explanation": "Higher interest rates reduce borrowing and spending, slowing overall economic growth."
+        "explanation": {
+          "en": "Rates and growth move in opposite directions: dearer credit holds back business investment and household purchases alike.",
+          "ja": "金利とGDP成長率は逆方向に動きます。信用コストが上がると、企業の投資も家計の購入も同じように抑えられます。"
+        }
       },
       "stock_market": {
         "direction": "negative",
-        "explanation": "Higher interest rates make bonds more attractive than stocks, and reduce company profits."
+        "explanation": {
+          "en": "Rates and share prices move in opposite directions: bonds look better by comparison, and borrowing costs eat into company profits.",
+          "ja": "金利と株価は逆方向に動きます。相対的に債券が魅力的になり、借入コストが企業の利益を圧迫します。"
+        }
       },
       "consumer_confidence": {
         "direction": "negative",
-        "explanation": "Higher interest rates make loans more expensive, making consumers feel less optimistic about spending."
+        "explanation": {
+          "en": "Rates and confidence move in opposite directions: loan repayments track the rate, so households feel it in their monthly budget.",
+          "ja": "金利と消費者信頼感は逆方向に動きます。ローンの返済額は金利に連動するため、家計は毎月の予算でそれを実感します。"
+        }
       },
       "bond_yields": {
         "direction": "positive",
-        "explanation": "Central bank rate changes directly influence bond market pricing"
+        "explanation": {
+          "en": "Rates and bond yields move together: the policy rate anchors the short end of the curve, and the effect passes along it.",
+          "ja": "金利と国債利回りは同じ方向に動きます。政策金利が利回り曲線の短期側を左右し、その影響が曲線全体に及びます。"
+        }
       },
       "consumer_spending": {
         "direction": "negative",
-        "explanation": "Higher rates increase loan costs (mortgages, credit cards), reducing disposable income."
+        "explanation": {
+          "en": "Rates and household spending move in opposite directions: mortgages and credit cards cost more, leaving less for everything else.",
+          "ja": "金利と個人消費は逆方向に動きます。住宅ローンやクレジットカードの負担が増え、他に使えるお金が減ります。"
+        }
       }
     },
     "inflation": {
       "consumer_confidence": {
         "direction": "negative",
-        "explanation": "Rising prices make people feel poorer and more worried about their finances."
+        "explanation": {
+          "en": "Inflation and confidence move in opposite directions: when prices outrun wages, households feel poorer whatever the payslip says.",
+          "ja": "インフレと消費者信頼感は逆方向に動きます。物価が賃金を上回ると、給与額に関わらず家計は貧しくなったと感じます。"
+        }
       },
       "exchange_rate": {
         "direction": "negative",
-        "explanation": "High inflation makes a currency less attractive to foreign investors."
+        "explanation": {
+          "en": "Inflation and the exchange rate move in opposite directions: money that loses purchasing power at home is worth less abroad too.",
+          "ja": "インフレと為替レートは逆方向に動きます。国内で購買力を失う通貨は、海外での価値も下がります。"
+        }
       },
       "stock_market": {
         "direction": "negative",
-        "explanation": "Inflation erodes company profits and makes investors nervous about the future."
+        "explanation": {
+          "en": "Inflation and share prices move in opposite directions: input costs squeeze margins, and investors discount future profits harder.",
+          "ja": "インフレと株価は逆方向に動きます。仕入れコストが利益率を圧迫し、投資家は将来の利益をより厳しく割り引きます。"
+        }
       },
       "interest_rate": {
         "direction": "positive",
-        "explanation": "High inflation often prompts central banks to raise interest rates to cool the economy."
+        "explanation": {
+          "en": "Inflation and rates move together: central banks set rates against an inflation target, and respond when prices drift away from it.",
+          "ja": "インフレと金利は同じ方向に動きます。中央銀行はインフレ目標に沿って金利を決め、物価が目標から離れると対応します。"
+        }
       },
       "bond_yields": {
-        "direction": "positive", 
-        "explanation": "Higher inflation expectations push bond yields up as investors demand compensation"
+        "direction": "positive",
+        "explanation": {
+          "en": "Inflation and bond yields move together: lenders want compensating for the purchasing power a fixed coupon will lose.",
+          "ja": "インフレと国債利回りは同じ方向に動きます。固定利付債が失う購買力の分を、投資家は上乗せして求めます。"
+        }
       }
     },
     "unemployment": {
       "consumer_confidence": {
         "direction": "negative",
-        "explanation": "High unemployment makes people worry about job security and their financial future."
+        "explanation": {
+          "en": "Unemployment and confidence move in opposite directions: a loose job market makes even those still in work worry about their own.",
+          "ja": "失業率と消費者信頼感は逆方向に動きます。雇用市場が緩むと、働いている人でも自分の職を不安に思います。"
+        }
       },
       "gdp_growth": {
         "direction": "negative",
-        "explanation": "High unemployment means less consumer spending, which slows economic growth."
+        "explanation": {
+          "en": "Unemployment and growth move in opposite directions: people out of work produce nothing and spend cautiously, and output reflects both.",
+          "ja": "失業率とGDP成長率は逆方向に動きます。失業者は生産に加われず支出も控えるため、経済全体の生産も落ちます。"
+        }
       },
       "inflation": {
         "direction": "negative",
-        "explanation": "High unemployment reduces demand for goods and services, keeping prices low."
+        "explanation": {
+          "en": "Unemployment and inflation move in opposite directions: slack in the labour market weakens both wage demands and spending.",
+          "ja": "失業率とインフレは逆方向に動きます。労働市場に余剰があると、賃上げ要求も支出も弱まります。"
+        }
       }
     },
     "gdp_growth": {
       "unemployment": {
         "direction": "negative",
-        "explanation": "Economic growth creates jobs as businesses expand and hire more workers."
+        "explanation": {
+          "en": "Growth and unemployment move in opposite directions: expanding firms take staff on, and shrinking ones let them go.",
+          "ja": "GDP成長率と失業率は逆方向に動きます。拡大する企業は人を雇い、縮小する企業は人を手放します。"
+        }
       },
       "consumer_confidence": {
         "direction": "positive",
-        "explanation": "Economic growth makes people feel optimistic about job prospects and income."
+        "explanation": {
+          "en": "Growth and confidence move together: when the economy is expanding, people expect their own jobs and incomes to hold up.",
+          "ja": "GDP成長率と消費者信頼感は同じ方向に動きます。経済が拡大しているとき、人々は自分の仕事も収入も保たれると考えます。"
+        }
       },
       "stock_market": {
         "direction": "positive",
-        "explanation": "Economic growth increases company profits and investor optimism."
+        "explanation": {
+          "en": "Growth and share prices move together: a growing economy sells more, and company earnings are what a share is a claim on.",
+          "ja": "GDP成長率と株価は同じ方向に動きます。経済が成長すれば売上が伸び、株式はその企業利益に対する請求権だからです。"
+        }
       },
       "inflation": {
         "direction": "positive",
-        "explanation": "Strong economic growth can lead to higher demand and rising prices."
+        "explanation": {
+          "en": "Growth and inflation move together: demand running ahead of what the economy can supply shows up as rising prices.",
+          "ja": "GDP成長率とインフレは同じ方向に動きます。需要が供給能力を上回ると、その差は物価の上昇として現れます。"
+        }
       }
     },
     "government_spending": {
       "gdp_growth": {
         "direction": "positive",
-        "explanation": "Government spending directly adds to economic activity and creates jobs."
+        "explanation": {
+          "en": "Spending and growth move together: government purchases count towards output directly, and the money spent circulates onwards.",
+          "ja": "政府支出とGDP成長率は同じ方向に動きます。政府の購入は生産に直接算入され、支出された資金はさらに循環します。"
+        }
       },
       "inflation": {
         "direction": "positive",
-        "explanation": "More government spending increases demand for goods and services, pushing prices up."
+        "explanation": {
+          "en": "Spending and inflation move together: the state competes with everyone else for the same goods, workers and materials.",
+          "ja": "政府支出とインフレは同じ方向に動きます。政府は同じ物資や人材をめぐって民間と競合するためです。"
+        }
       },
       "unemployment": {
         "direction": "negative",
-        "explanation": "Government spending creates jobs directly and stimulates private sector hiring."
+        "explanation": {
+          "en": "Spending and unemployment move in opposite directions: public projects hire directly, and their suppliers hire in turn.",
+          "ja": "政府支出と失業率は逆方向に動きます。公共事業は直接人を雇い、その受注先もまた人を雇います。"
+        }
       },
       "consumer_confidence": {
         "direction": "positive",
-        "explanation": "Government spending signals economic support, making people feel more secure."
+        "explanation": {
+          "en": "Spending and confidence move together: visible public support suggests the state will cushion a downturn if one arrives.",
+          "ja": "政府支出と消費者信頼感は同じ方向に動きます。目に見える公的支援は、不況が来ても政府が下支えするという安心につながります。"
+        }
       },
       "consumer_spending": {
         "direction": "positive",
-        "explanation": "Transfer payments (e.g., unemployment benefits) directly boost household spending."
+        "explanation": {
+          "en": "Spending and household spending move together: benefits and transfers land straight in household budgets and are spent quickly.",
+          "ja": "政府支出と個人消費は同じ方向に動きます。給付や移転支出は家計の予算に直接入り、すぐに使われます。"
+        }
       },
       "bond_yields": {
         "direction": "positive",
-        "explanation": "Deficit spending is financed by issuing more government debt, and the extra supply pushes yields up."
+        "explanation": {
+          "en": "Spending and bond yields move together: deficits are financed by borrowing, and more government borrowing pushes yields up.",
+          "ja": "政府支出と国債利回りは同じ方向に動きます。財政赤字は借入で賄われ、政府の借入が増えると利回りが上昇します。"
+        }
       }
     },
     "exchange_rate": {
       "inflation": {
         "direction": "negative",
-        "explanation": "A stronger currency makes imports cheaper, reducing overall price levels."
+        "explanation": {
+          "en": "The exchange rate and inflation move in opposite directions: a stronger currency buys more imports for the same money.",
+          "ja": "為替レートとインフレは逆方向に動きます。通貨が強くなれば、同じ金額でより多くの輸入品が買えます。"
+        }
       },
       "gdp_growth": {
         "direction": "negative",
-        "explanation": "A stronger currency makes exports more expensive, hurting economic growth."
+        "explanation": {
+          "en": "The exchange rate and growth move in opposite directions: a stronger currency prices exporters out of their foreign markets.",
+          "ja": "為替レートとGDP成長率は逆方向に動きます。通貨が強くなると、輸出企業は海外市場で価格競争力を失います。"
+        }
       },
       "unemployment": {
         "direction": "positive",
-        "explanation": "Strong currency can hurt export industries and cost jobs."
+        "explanation": {
+          "en": "The exchange rate and unemployment move together: exporters losing overseas orders cut back on staff at home.",
+          "ja": "為替レートと失業率は同じ方向に動きます。海外からの受注を失った輸出企業は、国内の雇用を削減します。"
+        }
       }
     },
     "stock_market": {
       "consumer_confidence": {
         "direction": "positive",
-        "explanation": "Rising stock prices make people feel wealthier and more optimistic."
+        "explanation": {
+          "en": "Share prices and confidence move together: rising portfolios make households feel wealthier and more secure.",
+          "ja": "株価と消費者信頼感は同じ方向に動きます。保有資産が増えると、家計は豊かで安心だと感じます。"
+        }
       },
       "gdp_growth": {
         "direction": "positive",
-        "explanation": "Higher stock prices make it easier for companies to raise money and invest."
+        "explanation": {
+          "en": "Share prices and growth move together: a higher market value makes it cheaper for firms to raise money and invest.",
+          "ja": "株価とGDP成長率は同じ方向に動きます。株価が高いほど企業は安く資金を調達でき、投資しやすくなります。"
+        }
       },
       "unemployment": {
         "direction": "negative",
-        "explanation": "Stock market growth often leads to business expansion and job creation."
+        "explanation": {
+          "en": "Share prices and unemployment move in opposite directions: firms that can raise capital cheaply expand, and expansion means hiring.",
+          "ja": "株価と失業率は逆方向に動きます。安く資金を調達できる企業は事業を拡大し、拡大は採用につながります。"
+        }
       }
     },
     "consumer_confidence": {
       "gdp_growth": {
         "direction": "positive",
-        "explanation": "Confident consumers spend more money, boosting economic activity."
+        "explanation": {
+          "en": "Confidence and growth move together: households that expect good times spend rather than save, and spending is most of output.",
+          "ja": "消費者信頼感とGDP成長率は同じ方向に動きます。先行きを楽観する家計は貯蓄より支出を選び、支出は生産の大半を占めます。"
+        }
       },
       "stock_market": {
         "direction": "positive",
-        "explanation": "Confident consumers drive business profits, making stocks more attractive."
+        "explanation": {
+          "en": "Confidence and share prices move together: what households are willing to spend feeds straight through to company revenues.",
+          "ja": "消費者信頼感と株価は同じ方向に動きます。家計がどれだけ支出するかは、企業の売上に直結します。"
+        }
       },
       "unemployment": {
         "direction": "negative",
-        "explanation": "High consumer confidence encourages business expansion and hiring."
+        "explanation": {
+          "en": "Confidence and unemployment move in opposite directions: firms hire ahead of the demand they expect their customers to bring.",
+          "ja": "消費者信頼感と失業率は逆方向に動きます。企業は顧客が生むと見込む需要を先取りして採用を行います。"
+        }
       },
       "consumer_spending": {
         "direction": "positive",
-        "explanation": "Confident consumers are more likely to make large purchases."
+        "explanation": {
+          "en": "Confidence and household spending move together: big purchases get made when people feel secure about next year's income.",
+          "ja": "消費者信頼感と個人消費は同じ方向に動きます。来年の収入に安心感があるとき、人々は大きな買い物をします。"
+        }
       }
     },
     "bond_yields": {
       "interest_rate": {
         "direction": "positive",
-        "explanation": "Central bank policy rates influence short-term yields, with effects transmitting along the yield curve"
+        "explanation": {
+          "en": "Yields and rates move together: the bond market prices in where it expects the central bank's policy rate to go next.",
+          "ja": "国債利回りと金利は同じ方向に動きます。債券市場は中央銀行の政策金利の先行きを織り込んで値付けします。"
+        }
       },
       "inflation": {
-        "direction": "negative", 
-        "explanation": "Higher yields increase borrowing costs, cooling economic activity and price pressures"
+        "direction": "negative",
+        "explanation": {
+          "en": "Yields and inflation move in opposite directions: yields set the cost of credit across the economy, and dearer credit cools demand.",
+          "ja": "国債利回りとインフレは逆方向に動きます。利回りは経済全体の信用コストを決め、信用が高くつくと需要が冷えます。"
+        }
       },
       "stock_market": {
         "direction": "negative",
-        "explanation": "Higher yields make bonds more attractive relative to stocks and increase discount rates for equity valuations"
+        "explanation": {
+          "en": "Yields and share prices move in opposite directions: bonds become the better bargain, and future earnings are discounted harder.",
+          "ja": "国債利回りと株価は逆方向に動きます。債券が相対的に有利になり、将来の利益はより厳しく割り引かれます。"
+        }
       },
       "gdp_growth": {
         "direction": "negative",
-        "explanation": "Higher yields increase borrowing costs for businesses and consumers, reducing investment and spending"
+        "explanation": {
+          "en": "Yields and growth move in opposite directions: firms and households borrow at rates set here, so investment and purchases follow.",
+          "ja": "国債利回りとGDP成長率は逆方向に動きます。企業も家計もここで決まる金利で借りるため、投資と購入もそれに従います。"
+        }
       },
       "exchange_rate": {
         "direction": "positive",
-        "explanation": "Higher yields attract foreign capital, strengthening the currency"
+        "explanation": {
+          "en": "Yields and the exchange rate move together: foreign capital chases the better return, and must buy the currency to get it.",
+          "ja": "国債利回りと為替レートは同じ方向に動きます。海外資金はより高い利回りを求め、そのために自国通貨を買います。"
+        }
       },
       "consumer_spending": {
         "direction": "negative",
-        "explanation": "Yields set mortgage and auto loan rates, so households have less left to spend as borrowing costs rise"
+        "explanation": {
+          "en": "Yields and household spending move in opposite directions: yields set mortgage and car loan rates, so households have less left over.",
+          "ja": "国債利回りと家計支出は逆方向に動きます。利回りは住宅ローンや自動車ローンの金利を左右するため、家計に残るお金が減ります。"
+        }
       }
     },
     "consumer_spending": {
       "gdp_growth": {
         "direction": "positive",
-        "explanation": "Consumer spending is the largest component of GDP in most economies."
+        "explanation": {
+          "en": "Household spending and growth move together: consumption is the largest single component of output in most economies.",
+          "ja": "個人消費とGDP成長率は同じ方向に動きます。多くの経済で、消費は生産の中で最も大きな構成要素です。"
+        }
       },
       "inflation": {
         "direction": "positive",
-        "explanation": "Increased spending raises demand for goods/services, pushing prices up."
+        "explanation": {
+          "en": "Household spending and inflation move together: more money chasing the same goods shows up in the price of those goods.",
+          "ja": "個人消費とインフレは同じ方向に動きます。同じ商品により多くのお金が向かえば、その商品の価格に現れます。"
+        }
       },
       "unemployment": {
         "direction": "negative",
-        "explanation": "Higher spending allows businesses to expand and hire more workers."
+        "explanation": {
+          "en": "Household spending and unemployment move in opposite directions: shops and services staff up to serve the customers they have.",
+          "ja": "個人消費と失業率は逆方向に動きます。小売やサービス業は、来店する客に応じて人員を増やします。"
+        }
       }
     }
   }
