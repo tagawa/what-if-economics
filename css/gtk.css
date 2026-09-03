@@ -118,7 +118,8 @@ header button:focus:not(:focus-visible) {
 }
 
 /* Language switcher — Adwaita linked/segmented toggle. Buttons share a border; the
-   active segment (aria-current="true") carries the accent fill. */
+   active segment (aria-current="true") carries a neutral fill and bolder text;
+   blue is reserved for focus rings. */
 #lang-switcher {
   display: inline-flex;
 }
@@ -140,14 +141,11 @@ header button:focus:not(:focus-visible) {
 }
 #lang-switcher button[aria-current="true"] {
   position: relative;
-  z-index: 1; /* keep the accent border above the overlapped neighbour */
-  background: #1a5fb4;
-  color: #ffffff;
-  border-color: #1a5fb4;
-}
-#lang-switcher button[aria-current="true"]:hover {
-  background: #1655a0;
-  border-color: #1655a0;
+  z-index: 1; /* keep the selected border above the overlapped neighbour */
+  background: #f0eeea;
+  color: #5e5c64;
+  border-color: #b0aba3;
+  font-weight: 700;
 }
 
 /* GtkFrame / card style */
@@ -204,7 +202,6 @@ header button:focus:not(:focus-visible) {
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   padding: 18px;
   transition: box-shadow 0.2s;
-  min-height: 150px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -226,7 +223,7 @@ header button:focus:not(:focus-visible) {
 }
 
 .factor-card h3 {
-  height: 2.5em;
+  min-height: 2.5em;
   text-align: center;
   margin: 0 0 8px 0;
   font-size: 0.875rem;
@@ -235,129 +232,83 @@ header button:focus:not(:focus-visible) {
 }
 
 .factor-description {
-  height: 3.5em;
+  /* No height at all: the old fixed 3.5em was already overrun by the longest
+     description. margin-top:auto pins this to the bottom of a stretched card
+     so the descriptions line up across a row even when titles differ in height.
+     The 8px gap moves to padding because margin-top is now doing the pinning. */
+  margin-top: auto;
   font-size: 0.8rem;
   color: #5e5c64;
   line-height: 1.4;
-  margin: 8px 0 0 0;
+  padding-top: 8px;
   text-align: center;
 }
 
-.factor-status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  min-height: 48px;
-}
-.factor-status.neutral {
-  background: #f0eeea;
-  color: #5e5c64;
-  border: 1px solid #d6d2cc;
-}
-.factor-status.increase {
-  background: #dbf1e0;
-  color: #1a7340;
-  border: 1px solid #26a269;
-}
-.factor-status.decrease {
-  background: #fde0e0;
-  color: #a51d2d;
-  border: 1px solid #e01b24;
-}
-
-.status-icon {
-  font-size: 1.3rem;
-  margin-right: 8px;
-  font-weight: bold;
-}
-.status-text {
-  font-size: 0.875rem;
-}
-
-.factor-controls {
+/* Segmented control — the readout and the control are one object. The selected
+   segment IS the factor's state, which is why there is no separate badge. */
+.segmented {
   display: flex;
   margin: 12px 0;
-  justify-content: center;
-}
-/* margin instead of flex `gap` for older-browser support */
-.factor-controls > * + * {
-  margin-left: 6px;
-}
-
-/* GtkButton style — flat inside cards */
-.control-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px 12px;
   border: 1px solid #c7c3bb;
   border-radius: 6px;
+  overflow: hidden; /* clips the children's square corners to the rounded frame */
+}
+.segment {
+  flex: 1 1 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  border: 0;
   background: #ffffff;
-  cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
-  min-width: 56px;
-  font-family: inherit;
   color: #1d1d1d;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s;
 }
-.control-btn:hover {
+/* A divider between segments, drawn as a border on all but the first, so the
+   three read as one control rather than three buttons. */
+.segment + .segment {
+  border-left: 1px solid #c7c3bb;
+}
+.segment:hover {
   background: #f0eeea;
-  border-color: #b0aba3;
 }
-.control-btn:active {
-  background: #e4e1dc;
-  box-shadow: none;
-}
-.control-btn:focus {
+/* Same two-rule focus pattern as `header button`, and for the same reason:
+   plain :focus shows the ring in browsers without :focus-visible (Safari < 15.4),
+   then modern browsers suppress it for mouse and touch. Without the second rule
+   every pointer click on a segment leaves a ring behind. The offset is negative
+   because .segmented clips an outset ring at its rounded frame. */
+.segment:focus {
   outline: 2px solid #1a5fb4;
-  outline-offset: 2px;
+  outline-offset: -2px;
 }
-
-.btn-icon {
+.segment:focus:not(:focus-visible) {
+  outline: none;
+}
+/* 1.3rem matches .ripple-dir, so the control and the results panel draw the same
+   arrow at the same size. The label beside it is visually hidden, not deleted, so
+   there is nothing here to shrink or wrap and the old overflow-clip cannot recur. */
+.segment-icon {
   font-size: 1.3rem;
   font-weight: bold;
-  margin-bottom: 2px;
-  line-height: 1;
-}
-.btn-text {
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
 }
 
-.increase-btn {
-  border-color: #b6dfc7;
+/* Colour rule 1: an unselected segment is neutral. No red, no green at rest.
+   Rule 2: the selected segment carries the colour. A deliberate neutral choice
+   is visibly chosen without shouting. */
+.segment-raise.selected {
+  background: #dbf1e0;
   color: #1a7340;
 }
-.increase-btn:hover {
-  background: #f4faf6;
-  border-color: #26a269;
-}
-.decrease-btn {
-  border-color: #f5bfbf;
+.segment-lower.selected {
+  background: #fde0e0;
   color: #a51d2d;
 }
-.decrease-btn:hover {
-  background: #fdf4f4;
-  border-color: #e01b24;
-}
-.reset-btn {
-  border-color: #c7c3bb;
-  color: #5e5c64;
-}
-.reset-btn:hover {
+.segment-reset.selected {
   background: #f0eeea;
-}
-
-.factor-bottom {
-  margin-top: auto;
+  color: #5e5c64;
 }
 
 #notes summary {
@@ -390,18 +341,70 @@ header button:focus:not(:focus-visible) {
   margin-bottom: 3px;
 }
 
+/* Ripple panel — the app's answer to "what follows?". Frame matches #scenarios. */
+#ripple {
+  background: #ffffff;
+  border: 1px solid #c7c3bb;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 18px;
+  margin-bottom: 24px;
+}
+.ripple-empty {
+  font-size: 0.8rem;
+  color: #5e5c64;
+}
+.ripple-cause {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1d1d1d;
+  margin-bottom: 12px;
+}
+.ripple-effects {
+  list-style: none;
+  padding: 0;
+}
+.ripple-effect {
+  margin-bottom: 12px;
+}
+.ripple-dir {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-right: 8px;
+}
+/* Colour reinforces the glyph and the state label; it is never the only signal. */
+.ripple-effect.increase .ripple-dir { color: #1a7340; }
+.ripple-effect.decrease .ripple-dir { color: #a51d2d; }
+.ripple-factor {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1d1d1d;
+}
+.ripple-why {
+  display: block;
+  font-size: 0.8rem;
+  color: #5e5c64;
+  line-height: 1.4;
+}
+
 @media (max-width: 768px) {
   header { flex-direction: column; }
   header > * + * { margin-top: 12px; } /* column spacing without flex `gap` */
   #factors { grid-template-columns: 1fr; }
   #scenarios button { display: block; width: 100%; margin: 8px 0; }
-  .factor-controls > * + * { margin-left: 6px; }
-  .control-btn { padding: 8px 10px; }
-  .btn-icon { font-size: 1.2rem; }
-  .btn-text { font-size: 0.65rem; }
-  .factor-card { min-height: 200px; }
-  .factor-status { padding: 10px; font-size: 0.875rem; }
-  .status-icon { font-size: 1.1rem; margin-right: 6px; }
+
+  /* Sticky so the answer stays on screen wherever the user is in the grid.
+     -webkit-sticky first: iOS Safari needs the prefix until iOS 13, and the
+     project's floor is iOS Safari 11. 33vh, not more, because half a phone
+     screen is too much to reserve; the panel scrolls internally instead. */
+  #ripple {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    max-height: 33vh;
+    overflow-y: auto;
+    z-index: 2;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -414,9 +417,12 @@ header button:focus:not(:focus-visible) {
 
 @media (prefers-contrast: high) {
   .factor-card { border: 2px solid #1d1d1d; }
-  .factor-status.increase { background: #c8f0d4; border: 2px solid #1a7340; }
-  .factor-status.decrease { background: #f8cccc; border: 2px solid #a51d2d; }
-  .control-btn { border-width: 2px; }
+  /* Selected and unselected must stay distinguishable here. Per the project's
+     own note, overrides on a light theme go more saturated, not darker. */
+  .segment-raise.selected { background: #c8f0d4; border: 2px solid #1a7340; }
+  .segment-lower.selected { background: #f8cccc; border: 2px solid #a51d2d; }
+  .segment-reset.selected { background: #f0eeea; border: 2px solid #1d1d1d; }
+  .segment + .segment { border-left-width: 2px; }
 }
 
 @media (max-width: 1000px) {
@@ -448,10 +454,4 @@ header button:focus:not(:focus-visible) {
   border-radius: 12px;
   background: #ffffff;
   color: #1d1d1d;
-}
-
-.factor-hint {
-  font-size: 0.8rem;
-  color: #5e5c64;
-  margin: 0 0 16px;
 }
