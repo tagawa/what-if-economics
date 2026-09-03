@@ -39,10 +39,54 @@ function visibleFactorIds(allFactorIds, isBeginnerMode, coreFactors) {
   return isBeginnerMode ? allFactorIds.filter(id => coreFactors.includes(id)) : allFactorIds;
 }
 
-// Ripple summary for the live region. Only factors with a rendered card are
-// announced, so screen reader users hear exactly what sighted users can see.
-function buildRippleSummary(targetIds, visibleIds, describe) {
-  return targetIds.filter(id => visibleIds.includes(id)).map(describe).join(', ');
+// Direction mapping for one edge. Mirrors adjustFactor's branch exactly:
+// anything that is not literally 'positive' is treated as negative, so a typo
+// in the data inverts the economics rather than throwing.
+function rippleTargetState(sourceState, direction) {
+  if (sourceState === 'neutral') return 'neutral';
+  if (direction === 'positive') return sourceState;
+  return sourceState === 'high' ? 'low' : 'high';
+}
+
+// Which segment of the three-part control is selected for a given factor state.
+// The names are the data-action values already in the markup, so the existing
+// #factors click delegation needs no change. An unrecognised state selects the
+// middle segment rather than leaving the radiogroup with nothing checked, which
+// mirrors the `default` arm of the switch this replaced and is also the only
+// valid ARIA outcome.
+function segmentForState(state) {
+  if (state === 'high') return 'raise';
+  if (state === 'low') return 'lower';
+  return 'reset';
+}
+
+// Wrapping index for arrow-key focus movement. Written with the extra + count
+// because JS's % keeps the sign of the dividend: (0 + -1) % 3 is -1, not 2.
+function nextSegmentIndex(current, step, count) {
+  return (current + step + count) % count;
+}
+
+// Structured description of one adjustment: what the user changed, and which
+// visible factors move as a result. Pure and i18n-free (callers resolve the
+// display strings), so the panel and the live region are built from one model
+// and cannot drift. Effects are filtered to visibleIds here, which is the single
+// place the Beginner Mode parity invariant is enforced.
+function buildRippleModel(sourceId, sourceState, relationships, visibleIds) {
+  const edges = relationships[sourceId] || {};
+  const effects = Object.keys(edges)
+    .filter(id => visibleIds.includes(id))
+    .map(id => ({
+      id: id,
+      state: rippleTargetState(sourceState, edges[id].direction),
+      explanation: edges[id].explanation
+    }));
+  return { cause: { id: sourceId, state: sourceState }, effects: effects };
+}
+
+// Live-region string for a ripple. Trivial, but kept as a named function because
+// it is what the parity invariant in docs/architecture.md is documented against.
+function buildRippleSummary(effects, describe) {
+  return effects.map(describe).join(', ');
 }
 
 class EconRipple {
@@ -51,6 +95,7 @@ class EconRipple {
     this.state = null;
     this.isBeginnerMode = false;
     this.hasTrackedAdjust = false; // fire "Adjusted a factor" only once per page load
+    this.lastCause = null; // {id, state} of the last adjustment; null means the panel is empty
     this.delays = { medium: 500 };
   }
 
@@ -118,15 +163,7 @@ class EconRipple {
 
     this.renderFactors();
     this.renderScenarios();
-
-    const hint = document.getElementById('factor-hint');
-    if (hint) {
-      if (this.state.getPreference('hintDismissed', false)) {
-        hint.style.display = 'none';
-      } else {
-        hint.textContent = i18n.t('factor.hint');
-      }
-    }
+    this.refreshRipple();
 
     // Register onChange listeners once for all factors — not in renderFactors(),
     // which is called on every re-render and would accumulate duplicate listeners.
@@ -157,11 +194,7 @@ class EconRipple {
       if (!card) return;
       const factorId = card.dataset.factor;
       const action = btn.dataset.action;
-      // Persist the hint-dismissed flag on the user's first +/- adjustment, so the
-      // hint is hidden from next load on — but stays on screen this session (no shift).
-      // Reset and scenarios deliberately do not set it.
       if (action === 'lower' || action === 'raise') {
-        this.state.savePreference('hintDismissed', true);
         // Coarse engagement signal: first DIRECT factor click per load. Lives here, not in
         // adjustFactor(), which applyScenario() also calls — that would misattribute scenarios.
         if (!this.hasTrackedAdjust) {
@@ -172,6 +205,32 @@ class EconRipple {
       if (action === 'lower') this.adjustFactor(factorId, 'low');
       else if (action === 'raise') this.adjustFactor(factorId, 'high');
       else if (action === 'reset') this.resetFactor(factorId);
+    });
+
+    // Arrow keys move focus between segments; they do NOT select. Committing here
+    // would fire a full ripple, a 500ms timer cascade and an announcement on every
+    // keypress, so arrowing across three segments would run three complete ripples.
+    // Space and Enter commit, and they need no code: these are real <button>
+    // elements, so the browser fires a click for them and the delegation above
+    // handles it. Adding a commit path here would double-fire.
+    document.getElementById('factors').addEventListener('keydown', (e) => {
+      const btn = e.target.closest('button[role="radio"]');
+      if (!btn) return;
+      let step = 0;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') step = -1;
+      else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') step = 1;
+      if (!step) return;
+      e.preventDefault(); // otherwise Arrow Up/Down scrolls the page as well
+
+      const group = btn.closest('[role="radiogroup"]');
+      if (!group) return;
+      const segs = Array.prototype.slice.call(group.querySelectorAll('button[role="radio"]'));
+      const next = segs[nextSegmentIndex(segs.indexOf(btn), step, segs.length)];
+      // Move the roving tabindex with focus, so a later Tab out and back returns
+      // here rather than to the selected segment.
+      segs.forEach(s => s.setAttribute('tabindex', '-1'));
+      next.setAttribute('tabindex', '0');
+      next.focus();
     });
 
     // Scenario delegation — one listener on #scenarios
@@ -195,26 +254,29 @@ class EconRipple {
 
     container.innerHTML = visibleFactors.map(factorId => {
       const name = this.data.getFactorName(factorId);
+      // The label is visually hidden, not removed: the glyph carries the meaning on
+      // screen, and the text remains the button's accessible name, so a screen
+      // reader still announces "Lower Interest Rate". Deleting the span would leave
+      // the accessible name as a bare arrow character.
+      //
+      // seg() takes RESOLVED strings, never key names. A helper that took a key
+      // name and looked it up internally reads as tidier and breaks
+      // test/i18n-completeness.test.js, which scans call sites for literal string
+      // arguments and fails loudly on a variable key. Worse than the red gate is
+      // what a merely-skipped call would cost: these six keys are exactly the ones
+      // guarding that the JA locale has a label for every segment.
+      const seg = (action, title, label, glyph) => `
+            <button class="segment segment-${action}" role="radio" aria-checked="false" tabindex="-1"
+                    data-action="${action}" title="${title}">
+              <span class="segment-icon" aria-hidden="true">${glyph}</span><span class="visually-hidden">${label}</span>
+            </button>`;
       return `
         <div class="factor-card" data-factor="${factorId}">
           <h3>${name}</h3>
-          <div class="factor-status neutral" id="status-${factorId}">
-            <span class="status-icon" aria-hidden="true">●</span>
-            <span class="status-text">${i18n.t('factor.status_neutral')}</span>
-          </div>
-          <div class="factor-controls">
-            <button class="control-btn decrease-btn" data-action="lower" title="${i18n.t('factor.btn_lower_title').split('{name}').join(name)}">
-              <span class="btn-icon">−</span>
-              <span class="btn-text">${i18n.t('factor.btn_lower')}</span>
-            </button>
-            <button class="control-btn reset-btn" data-action="reset" title="${i18n.t('factor.btn_reset_title').split('{name}').join(name)}">
-              <span class="btn-icon">●</span>
-              <span class="btn-text">${i18n.t('factor.btn_reset')}</span>
-            </button>
-            <button class="control-btn increase-btn" data-action="raise" title="${i18n.t('factor.btn_raise_title').split('{name}').join(name)}">
-              <span class="btn-icon">+</span>
-              <span class="btn-text">${i18n.t('factor.btn_higher')}</span>
-            </button>
+          <div class="segmented" role="radiogroup" aria-label="${name}" id="segments-${factorId}">${
+            seg('lower', i18n.t('factor.btn_lower_title').split('{name}').join(name), i18n.t('factor.btn_lower'), '↓')}${
+            seg('reset', i18n.t('factor.btn_reset_title').split('{name}').join(name), i18n.t('factor.status_neutral'), '●')}${
+            seg('raise', i18n.t('factor.btn_raise_title').split('{name}').join(name), i18n.t('factor.btn_higher'), '↑')}
           </div>
           <p class="factor-description">${this.data.getFactorDescription(factorId)}</p>
         </div>
@@ -239,9 +301,95 @@ class EconRipple {
     `;
   }
 
+  // Rebuild the panel from the last adjustment. Called on adjust, reset, language
+  // switch and Beginner Mode toggle, so the panel always reflects the current
+  // locale and the currently visible factor set.
+  refreshRipple() {
+    if (!this.lastCause) {
+      this.renderRippleCompensated(null);
+      return;
+    }
+    const visible = visibleFactorIds(Object.keys(this.data.factors), this.isBeginnerMode, CORE_FACTORS);
+    this.renderRippleCompensated(buildRippleModel(this.lastCause.id, this.lastCause.state, this.data.relationships, visible));
+  }
+
+  // Safari implements no scroll anchoring on any platform, so a panel that grows
+  // above the user's scroll position shifts everything below it under their finger,
+  // 500 ms after their tap. Measure across the render and absorb the difference.
+  //
+  // getBoundingClientRect() returns the STUCK position, not the flow position: a
+  // sticky panel pinned at top:0 always reports rect.top === 0 however far the page
+  // has scrolled. That is why the stuck test is rect.top <= 0 and not a document
+  // offset — any condition phrased in document coordinates gets implemented with
+  // this same call and silently inverts.
+  renderRippleCompensated(model) {
+    const panel = document.getElementById('ripple');
+    if (!panel) {
+      this.renderRipple(model);
+      return;
+    }
+    const before = panel.getBoundingClientRect();
+    // Branch on the computed position, not on window.innerWidth: the 768px
+    // breakpoint then lives only in the stylesheet and cannot drift. Substring
+    // match because old iOS reports '-webkit-sticky' as the computed value.
+    const isSticky = getComputedStyle(panel).position.indexOf('sticky') !== -1;
+    // Never OR these: rect.bottom <= 0 implies rect.top <= 0, so a disjunction
+    // collapses to the sticky test and would compensate a desktop panel that is
+    // still half on screen.
+    const compensate = isSticky ? before.top <= 0 : before.bottom <= 0;
+    const heightBefore = before.height;
+
+    this.renderRipple(model);
+
+    if (!compensate) return; // growth is on screen, and the growth is the feedback
+    const delta = panel.getBoundingClientRect().height - heightBefore;
+    if (delta) window.scrollBy(0, delta);
+  }
+
+  // The panel is the app's answer to "what follows?". Effect rows use
+  // getFactorLabel(), the same accessor the live region uses, so the panel reads
+  // in exactly the words the screen reader announces.
+  renderRipple(model) {
+    const panel = document.getElementById('ripple');
+    if (!panel) return;
+
+    if (!model) {
+      panel.className = 'ripple-empty';
+      panel.textContent = i18n.t('ripple.empty');
+      return;
+    }
+
+    // The key ternary sits inside the t() call and its only string literals are the
+    // two keys: the i18n-completeness gate reads every quoted string in the argument
+    // span as a key, so the 'high' comparison has to be hoisted out of it.
+    const raised = model.cause.state === 'high';
+    const cause = i18n.t(raised ? 'ripple.cause_high' : 'ripple.cause_low')
+      .split('{name}').join(this.data.getFactorName(model.cause.id));
+
+    // innerHTML with first-party data only: factor names and explanations come
+    // from our own JSON, the same trust level as renderFactors() above.
+    const rows = model.effects.map(effect => {
+      const dirClass = effect.state === 'high' ? 'increase' : 'decrease';
+      const glyph = effect.state === 'high' ? '↑' : '↓';
+      return `
+        <li class="ripple-effect ${dirClass}">
+          <span class="ripple-dir" aria-hidden="true">${glyph}</span>
+          <span class="ripple-factor">${this.data.getFactorName(effect.id)}: ${this.data.getFactorLabel(effect.id, effect.state)}</span>
+          <span class="ripple-why">${i18n.resolveField(effect.explanation)}</span>
+        </li>
+      `;
+    }).join('');
+
+    panel.className = 'ripple-filled';
+    panel.innerHTML =
+      `<p class="ripple-cause">${cause}</p>` +
+      (rows ? `<ul class="ripple-effects">${rows}</ul>` : '');
+  }
+
   adjustFactor(factorId, newState) {
     // Set the factor to the new state
     this.state.set(factorId, newState);
+    this.lastCause = { id: factorId, state: newState };
 
     // Announce the user's own adjustment immediately. No visibility filter needed:
     // this card is always rendered — the user clicked it, or applyScenario triggered
@@ -283,49 +431,48 @@ class EconRipple {
 
     // After the ripple settles, announce the resulting related changes.
     // Registered after the per-target timers at the same delay, so state has settled.
-    if (Object.keys(relationships).length > 0) {
-      const self = this;
-      setTimeout(function () {
-        const visible = visibleFactorIds(Object.keys(self.data.factors), self.isBeginnerMode, CORE_FACTORS);
-        const summary = buildRippleSummary(Object.keys(relationships), visible, function (id) {
-          return self.data.getFactorName(id) + ': ' + self.data.getFactorLabel(id, self.state.get(id));
-        });
-        // Empty when every ripple target is hidden in Beginner Mode; announcing '' is noise.
-        if (summary) self.announce(summary);
-      }, this.delays.medium);
-    }
+    // Runs unconditionally, not only when relationships exist, so a factor with
+    // no outgoing edges still clears the panel to a cause-only state.
+    const self = this;
+    setTimeout(function () {
+      const visible = visibleFactorIds(Object.keys(self.data.factors), self.isBeginnerMode, CORE_FACTORS);
+      self.refreshRipple();
+      const model = buildRippleModel(factorId, newState, self.data.relationships, visible);
+      const summary = buildRippleSummary(model.effects, function (e) {
+        return self.data.getFactorName(e.id) + ': ' + self.data.getFactorLabel(e.id, e.state);
+      });
+      // Empty when every ripple target is hidden in Beginner Mode; announcing '' is noise.
+      if (summary) self.announce(summary);
+    }, this.delays.medium);
   }
 
+  // The selected segment is the factor's state: no separate badge to keep in
+  // sync. Also applies the card tint, which is the at-a-glance scanning layer
+  // the colour budget is spent on; before this slice the .factor-card.increase
+  // rules existed in CSS but nothing ever added the class.
   updateDisplay(factorId, state) {
-    const statusElement = document.getElementById(`status-${factorId}`);
-    if (!statusElement) return;
+    const group = document.getElementById(`segments-${factorId}`);
+    if (!group) return;
 
-    const icon = statusElement.querySelector('.status-icon');
-    const text = statusElement.querySelector('.status-text');
-
-    // Remove existing classes
-    statusElement.classList.remove('neutral', 'increase', 'decrease');
-
-    // Update display based on state
-    switch(state) {
-      case 'high':
-        // state is 'high' or 'low' here, never 'neutral'
-        icon.textContent = '↑';
-        text.textContent = this.data.getFactorLabel(factorId, 'high');
-        statusElement.classList.add('increase');
-        break;
-      case 'low':
-        icon.textContent = '↓';
-        text.textContent = this.data.getFactorLabel(factorId, 'low');
-        statusElement.classList.add('decrease');
-        break;
-      case 'neutral':
-      default:
-        icon.textContent = '●';
-        text.textContent = i18n.t('factor.status_neutral');
-        statusElement.classList.add('neutral');
-        break;
+    const card = document.querySelector(`[data-factor="${factorId}"]`);
+    if (card) {
+      card.classList.remove('increase', 'decrease');
+      if (state === 'high') card.classList.add('increase');
+      else if (state === 'low') card.classList.add('decrease');
     }
+
+    const selected = segmentForState(state);
+    group.querySelectorAll('button[data-action]').forEach(function (btn) {
+      const on = btn.dataset.action === selected;
+      btn.setAttribute('aria-checked', on ? 'true' : 'false');
+      // Roving tabindex: exactly one segment per group is tab-reachable, and it
+      // is the selected one, so Tab lands on the current value rather than the
+      // first segment. Written as add/remove, not classList.toggle(cls, force),
+      // whose second argument is unreliable below the browser floor here.
+      btn.setAttribute('tabindex', on ? '0' : '-1');
+      if (on) btn.classList.add('selected');
+      else btn.classList.remove('selected');
+    });
   }
 
   animateCard(factorId) {
@@ -362,12 +509,22 @@ class EconRipple {
   reset() {
     this.state.reset();
 
+    this.lastCause = null;
+    this.refreshRipple();
+
     document.querySelectorAll('.factor-card').forEach(card => {
       card.classList.remove('pulse');
     });
   }
 
   resetFactor(factorId) {
+    // Always clear, never conditionally on lastCause.id === factorId. resetFactor
+    // neutralises this factor AND all its relationship targets, any of which may be
+    // a row in the current panel, so a panel left standing would describe factors
+    // whose cards have just gone neutral.
+    this.lastCause = null;
+    this.refreshRipple();
+
     this.state.set(factorId, 'neutral');
     const card = document.querySelector(`[data-factor="${factorId}"]`);
     if (card) card.classList.remove('pulse');
@@ -393,6 +550,8 @@ class EconRipple {
     if (this.isBeginnerMode && window.fathom) window.fathom.trackPageview({ url: location.href });
 
     this.renderFactors();
+    this.renderScenarios(); // Beginner Mode filters scenarios too; without this the panel goes stale
+    this.refreshRipple(); // visible factor set changed, so the effect list must be re-filtered
 
     const button = document.getElementById('btn-beginner');
     if (button) {
@@ -425,17 +584,13 @@ class EconRipple {
     });
     this.renderFactors();
     this.renderScenarios();
-
-    const hint = document.getElementById('factor-hint');
-    if (hint && hint.style.display !== 'none') {
-      hint.textContent = i18n.t('factor.hint');
-    }
+    this.refreshRipple();
   }
 }
 
 // In Node (tests) export the pure helpers; in the browser bootstrap the app.
 if (typeof module !== 'undefined') {
-  module.exports = { CORE_FACTORS, scenarioFitsBeginnerMode, resolveInitialBeginnerMode, buildBeginnerSearch, visibleFactorIds, buildRippleSummary };
+  module.exports = { CORE_FACTORS, scenarioFitsBeginnerMode, resolveInitialBeginnerMode, buildBeginnerSearch, visibleFactorIds, buildRippleSummary, rippleTargetState, buildRippleModel, segmentForState, nextSegmentIndex };
 } else {
   const app = new EconRipple();
   document.addEventListener('DOMContentLoaded', () => app.init());
