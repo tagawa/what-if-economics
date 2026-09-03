@@ -108,6 +108,10 @@
       "consumer_spending": {
         "direction": "positive",
         "explanation": "Transfer payments (e.g., unemployment benefits) directly boost household spending."
+      },
+      "bond_yields": {
+        "direction": "positive",
+        "explanation": "Deficit spending is financed by issuing more government debt, and the extra supply pushes yields up."
       }
     },
     "exchange_rate": {
@@ -176,6 +180,10 @@
       "exchange_rate": {
         "direction": "positive",
         "explanation": "Higher yields attract foreign capital, strengthening the currency"
+      },
+      "consumer_spending": {
+        "direction": "negative",
+        "explanation": "Yields set mortgage and auto loan rates, so households have less left to spend as borrowing costs rise"
       }
     },
     "consumer_spending": {
