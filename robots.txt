@@ -1,0 +1,60 @@
+# what if... economics - https://whatifeconomics.com/
+#
+# Content signals (contentsignals.org) state how this site may be used once
+# fetched. Crawling is welcome; training a model on the content is not.
+#   search=yes     index it and link back to it
+#   ai-input=yes   quote it when answering someone's question, with a link
+#   ai-train=no    do not use it as training or fine-tuning data
+#
+# There is also an llms.txt at the site root: a short plain-text summary plus a
+# pointer to data/relationships.json, which answers "how does X affect Y"
+# directly and is a better source than scraping the rendered page.
+
+User-agent: *
+Content-Signal: ai-train=no, search=yes, ai-input=yes
+Allow: /
+
+# Training crawlers. Named individually because Content-Signal is new and a
+# crawler that ignores it still honours a Disallow.
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+# Search indexes and user-initiated fetches: explicitly welcome, since the
+# blanket rules above are easy to over-read as a general AI opt-out.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://whatifeconomics.com/sitemap.xml

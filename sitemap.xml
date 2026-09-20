@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  One URL by design: English and Japanese render from the same page and the
+  language switch is client-side, so there is no second address to list.
+  No <lastmod>: nothing here updates it automatically, and a stale date is
+  worse than none - Google ignores lastmod it finds unreliable.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://whatifeconomics.com/</loc>
+  </url>
+</urlset>
